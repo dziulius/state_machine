@@ -1,19 +1,19 @@
 require 'state_machine'
-require 'support/valid_machine'
+require 'support/fancy_machine'
 
 RSpec.describe StateMachine do
   context 'when machine is valid' do
-    let(:machine) { ValidMachine.new }
+    let(:machine) { FancyMachine.new }
 
     context 'when default state passed' do
       it 'uses given state' do
-        expect(ValidMachine.new(:running)).to be_running
+        expect(FancyMachine.new(:running)).to be_running
       end
     end
 
     context 'when no state passed' do
       it 'uses initial state' do
-        expect(ValidMachine.new).to be_standing
+        expect(FancyMachine.new).to be_standing
       end
     end
 
@@ -41,16 +41,6 @@ RSpec.describe StateMachine do
           }.to raise_error(StateMachine::UnknownTransitionError)
         end
       end
-    end
-  end
-
-  context 'when state is invalid' do
-    class TestInvalidState
-    end
-  end
-
-  context 'when transition is invalid' do
-    class TestInvalidTransition
     end
   end
 end

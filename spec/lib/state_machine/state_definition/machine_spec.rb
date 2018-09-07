@@ -55,8 +55,32 @@ RSpec.describe StateMachine::StateDefinition::Machine do
 
   describe '#add_event' do
     it 'adds event' do
+      add_waiting_state
+      add_running_state
+
       expect(StateMachine::StateDefinition::Event).to receive(:new).with(:run).and_call_original
       add_run_event
+    end
+
+    context 'validating' do
+      context 'when missing states' do
+        it 'raises error' do
+          expect {
+            add_run_event
+          }.to raise_error(StateMachine::UndefinedStateError)
+        end
+      end
+
+      context 'when states valid' do
+        it 'raises error' do
+          add_waiting_state
+          add_running_state
+
+          expect {
+            add_run_event
+          }.not_to raise_error
+        end
+      end
     end
   end
 
@@ -70,6 +94,16 @@ RSpec.describe StateMachine::StateDefinition::Machine do
       it 'sets initial state' do
         add_waiting_state
         expect(machine.initial_state_from(nil)).to eq(:waiting)
+      end
+    end
+
+    context 'when duplicate initial state' do
+      it 'raises error' do
+        add_waiting_state
+
+        expect {
+          machine.add_state :running, initial: true
+        }.to raise_error(StateMachine::DuplicatedInitialStateError)
       end
     end
 

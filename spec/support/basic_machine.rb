@@ -9,6 +9,6 @@ class BasicMachine
   end
 
   event :stop do
-    transitions from: :waking, to: :standing
+    transitions from: :walking, to: :standing
   end
 end

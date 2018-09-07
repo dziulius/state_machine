@@ -1,7 +1,7 @@
 require 'state_machine/machine_runner'
 
 RSpec.describe StateMachine::MachineRunner do
-  let(:machine) { ValidMachine.new }
+  let(:machine) { FancyMachine.new }
 
   describe '#can_perform' do
     context 'when transition available' do

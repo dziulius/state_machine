@@ -16,6 +16,12 @@ module StateMachine
         available_transitions.detect { |transition| transition.from?(state) }
       end
 
+      def validate(states)
+        return true if available_transitions.all? { |transition| transition.valid?(states) }
+
+        raise UndefinedStateError
+      end
+
       private
 
       attr_writer :name

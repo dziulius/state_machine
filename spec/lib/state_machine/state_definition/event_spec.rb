@@ -39,4 +39,36 @@ RSpec.describe StateMachine::StateDefinition::Event do
       expect(event.name).to eq(:test_event)
     end
   end
+
+  describe '#validate' do
+    let(:running_state) { StateMachine::StateDefinition::State.new(:running, {}) }
+    let(:passing_state) { StateMachine::StateDefinition::State.new(:passing, {}) }
+    let(:failing_state) { StateMachine::StateDefinition::State.new(:failing, {}) }
+
+    let(:event) do
+      described_class.new(
+        :pass,
+        &proc do
+          transitions from: :failing, to: :passing
+          transitions from: :running, to: :passing
+        end
+      )
+    end
+
+    context 'when all transitions are valid' do
+      it 'returns true' do
+        states = { running: running_state, passing: passing_state, failing: failing_state }
+
+        expect(event.validate(states)).to eq(true)
+      end
+    end
+
+    context 'when one of transitions is invalid' do
+      it 'raises error' do
+        expect {
+          event.validate(running: running_state)
+        }.to raise_error(StateMachine::UndefinedStateError)
+      end
+    end
+  end
 end

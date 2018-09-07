@@ -15,22 +15,29 @@ module StateMachine
         return nil if states.empty?
         return state if state && states.key?(state.to_sym)
 
-        initial_state 
+        initial_state
       end
 
       def add_state(name, initial: false, **options)
         state = State.new(name, options)
         states[state.name] = state
 
-        self.initial_state = state.name if initial
+        assign_initial_state(state) if initial
       end
 
       def add_event(name, &block)
         event = Event.new(name, &block)
+        event.validate(states)
         events[event.name] = event
       end
 
       private
+
+      def assign_initial_state(state)
+        raise DuplicatedInitialStateError if initial_state
+
+        self.initial_state = state.name
+      end
 
       attr_writer :states, :events, :initial_state
     end

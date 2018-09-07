@@ -50,7 +50,30 @@ RSpec.describe StateMachine::StateDefinition::Transition do
       expect(transition.callbacks).to match(
         before: instance_of(StateMachine::Callable),
         after: instance_of(StateMachine::Callable)
-        )
+      )
+    end
+  end
+
+  describe '#valid?' do
+    let(:running_state) { StateMachine::StateDefinition::State.new(:running, {}) }
+    let(:passing_state) { StateMachine::StateDefinition::State.new(:passing, {}) }
+
+    context 'when all states defined' do
+      it 'is valid' do
+        expect(transition).to be_valid(running: running_state, passing: passing_state)
+      end
+    end
+
+    context 'when from state missing' do
+      it 'is invalid' do
+        expect(transition).not_to be_valid(running: running_state)
+      end
+    end
+
+    context 'when to state missing' do
+      it 'is invalid' do
+        expect(transition).not_to be_valid(passing: passing_state)
+      end
     end
   end
 end

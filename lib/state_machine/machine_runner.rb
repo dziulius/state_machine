@@ -20,7 +20,7 @@ module StateMachine
     end
 
     def can_perform?
-      transition != nil && transition_can_run?
+      !transition.nil? && transition_can_run?
     end
 
     private

@@ -18,6 +18,10 @@ module StateMachine
         from.include?(state)
       end
 
+      def valid?(states)
+        states.key?(to) && from.all? { |state| states.key?(state) }
+      end
+
       private
 
       attr_writer :to, :callbacks, :condition, :from
