@@ -67,7 +67,7 @@ Available callbacks: `before_enter`, `after_enter`, `before_leave`, `after_leave
 
 #### Transition callbacks
 
-Transisions support before and after callbacks. Callback can be a method name defined on your StateMachine or a proc accepting your state machine instance.
+Transitions support before and after callbacks. A callback can be a method name defined on your StateMachine or a proc accepting your state machine instance.
 
 ```ruby
 class MovementState
@@ -111,7 +111,7 @@ Callbacks are called in following order:
 
 ### Transition conditions
 
-A condition can be defined on transition to check if it can be ran. Condition can be a method or a proc.
+A condition can be defined on a transition to check if it can be run. A condition can be a method or a proc.
 
 ```ruby
 class MovementState
