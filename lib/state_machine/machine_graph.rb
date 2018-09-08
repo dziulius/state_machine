@@ -44,7 +44,7 @@ module StateMachine
 
     # :reek:NestedIterators
     def add_event_edges(event)
-      event.available_transitions.each do |transition|
+      event.transitions.each do |transition|
         transition.from.each do |from|
           graph.add_edges(nodes[from], nodes[transition.to], label: event.name.to_s)
         end

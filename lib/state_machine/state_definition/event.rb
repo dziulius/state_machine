@@ -1,37 +1,30 @@
 require_relative 'transition'
+require_relative 'transitions_builder'
 
 module StateMachine
   module StateDefinition
-    # Parses and contains transisions available on event
+    # Parses and contains transitions available on event
     class Event
-      attr_reader :name, :available_transitions
+      attr_reader :name, :transitions
 
       def initialize(name, &block)
         self.name = name.to_sym
-        self.available_transitions = []
-
-        instance_eval(&block)
+        self.transitions = TransitionsBuilder.new.build(&block)
       end
 
       def find_transition(state)
-        available_transitions.detect { |transition| transition.from?(state) }
+        transitions.detect { |transition| transition.from?(state) }
       end
 
       def validate(states)
-        return true if available_transitions.all? { |transition| transition.valid?(states) }
+        transitions.each { |transition| transition.validate(states) }
 
-        raise UndefinedStateError
+        true
       end
 
       private
 
-      attr_writer :name, :available_transitions
-
-      def transitions(options)
-        transition = Transition.new(options)
-
-        available_transitions.push(transition)
-      end
+      attr_writer :name, :transitions
     end
   end
 end

@@ -21,11 +21,5 @@ RSpec.describe StateMachine::Callable do
     it 'does returns nil' do
       expect(described_class.new(nil).call(target)).to be_nil
     end
-
-    it 'does not crash' do
-      expect {
-        described_class.new(nil).call(target)
-      }.not_to raise_error
-    end
   end
 end

@@ -9,7 +9,7 @@ module StateMachine
     # DSL for defining state machine
     # defines helper methods on state machine
     module ClassMethods
-      def state(name, options = {})
+      def state(name, **options)
         machine.add_state(name, options)
         define_state_methods(name)
       end
@@ -36,7 +36,7 @@ module StateMachine
       def define_event_methods(name)
         class_eval <<-RUBY, __FILE__, __LINE__ + 1
           def #{name}!
-            MachineRunner.new(self, :'#{name}').perform
+            MachineRunner.new(self, :'#{name}').perform!
           end
 
           def can_#{name}?
@@ -47,21 +47,13 @@ module StateMachine
     end
 
     # Defines initializer on state machine
-    # :reek:ModuleInitialize
+    # :reek:ModuleInitialize :reek:Attribute
     module InstanceMethods
-      attr_reader :state
+      attr_accessor :state
 
       def initialize(state = nil)
         self.state = self.class.machine.initial_state_from(state)
       end
-
-      def update_state(new_state)
-        self.state = new_state
-      end
-
-      private
-
-      attr_writer :state
     end
   end
 end

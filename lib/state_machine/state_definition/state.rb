@@ -8,7 +8,7 @@ module StateMachine
 
       attr_reader :name, :callbacks
 
-      def initialize(name, options)
+      def initialize(name, **options)
         self.name = name.to_sym
         self.callbacks = build_callbacks(options)
       end

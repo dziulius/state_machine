@@ -11,7 +11,7 @@ module StateMachine
       # :reek:DuplicateMethodCall
       def initialize(from:, to:, **options)
         self.from = Array(from).map(&:to_sym)
-        self.to = to
+        self.to = to.to_sym
         self.condition = Callable.new(options[:when]) if options[:when]
         self.callbacks = build_callbacks(options)
       end
@@ -20,8 +20,12 @@ module StateMachine
         from.include?(state)
       end
 
-      def valid?(states)
-        states.key?(to) && from.all? { |state| states.key?(state) }
+      def validate(states)
+        [to].concat(from).each do |state|
+          raise UndefinedStateError, "Missing state: #{state}" unless states.key?(state)
+        end
+
+        true
       end
 
       private

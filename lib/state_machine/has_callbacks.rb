@@ -1,9 +1,9 @@
 module StateMachine
   # Simple module for wrapping callbacks and returning specific callback
   module HasCallbacks
-    def build_callbacks(options)
+    def build_callbacks(**options)
       self.class::AVAILABLE_CALLBACKS.each_with_object({}) do |name, hash|
-        callback = options[name] || options[name.to_s]
+        callback = options[name]
         next unless callback
         hash[name] = Callable.new(callback)
       end

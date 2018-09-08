@@ -42,5 +42,19 @@ RSpec.describe StateMachine do
         end
       end
     end
+
+    describe '#can_perform?' do
+      context 'when event can be performed' do
+        it 'returns true' do
+          expect(machine.can_run?).to eq(true)
+        end
+      end
+
+      context 'when event cannot be performed' do
+        it 'returns true' do
+          expect(machine.can_hold?).to eq(false)
+        end
+      end
+    end
   end
 end

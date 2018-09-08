@@ -54,25 +54,31 @@ RSpec.describe StateMachine::StateDefinition::Transition do
     end
   end
 
-  describe '#valid?' do
+  describe '#validate' do
     let(:running_state) { StateMachine::StateDefinition::State.new(:running, {}) }
     let(:passing_state) { StateMachine::StateDefinition::State.new(:passing, {}) }
 
     context 'when all states defined' do
       it 'is valid' do
-        expect(transition).to be_valid(running: running_state, passing: passing_state)
+        expect {
+          transition.validate(running: running_state, passing: passing_state)
+        }.not_to raise_error
       end
     end
 
     context 'when from state missing' do
-      it 'is invalid' do
-        expect(transition).not_to be_valid(running: running_state)
+      it 'raises error' do
+        expect {
+          transition.validate(running: running_state)
+        }.to raise_error(StateMachine::UndefinedStateError, /passing/)
       end
     end
 
     context 'when to state missing' do
-      it 'is invalid' do
-        expect(transition).not_to be_valid(passing: passing_state)
+      it 'raises error' do
+        expect {
+          transition.validate(passing: passing_state)
+        }.to raise_error(StateMachine::UndefinedStateError, /running/)
       end
     end
   end

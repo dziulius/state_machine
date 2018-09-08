@@ -13,7 +13,6 @@ module StateMachine
       end
 
       def initial_state_from(state)
-        return nil if states.empty?
         return state if state && states.key?(state.to_sym)
 
         initial_state
@@ -31,6 +30,11 @@ module StateMachine
         event = Event.new(name, &block)
         event.validate(states)
         events[event.name] = event
+      end
+
+      def find_transition(event_name, state_name)
+        event = events.fetch(event_name) { raise UnknownEventError }
+        event.find_transition(state_name)
       end
 
       private

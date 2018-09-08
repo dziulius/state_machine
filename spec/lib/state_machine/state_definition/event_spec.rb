@@ -2,7 +2,7 @@ require 'state_machine/state_definition/event'
 
 RSpec.describe StateMachine::StateDefinition::Event do
   let(:event) do
-    described_class.new('test_event', &proc { transitions from: :running, to: :passing })
+    described_class.new('test_event') { transitions from: :running, to: :passing }
   end
 
   context 'parsing transitions' do
@@ -16,13 +16,10 @@ RSpec.describe StateMachine::StateDefinition::Event do
 
   describe '#find_transition' do
     let(:event) do
-      described_class.new(
-        :test_event,
-        &proc do
-          transitions from: :running, to: :passing
-          transitions from: :failing, to: :passing
-        end
-      )
+      described_class.new(:test_event) do
+        transitions from: :running, to: :passing
+        transitions from: :failing, to: :passing
+      end
     end
 
     it 'returns transition for given state' do
@@ -46,13 +43,10 @@ RSpec.describe StateMachine::StateDefinition::Event do
     let(:failing_state) { StateMachine::StateDefinition::State.new(:failing, {}) }
 
     let(:event) do
-      described_class.new(
-        :pass,
-        &proc do
-          transitions from: :failing, to: :passing
-          transitions from: :running, to: :passing
-        end
-      )
+      described_class.new(:pass) do
+        transitions from: :failing, to: :passing
+        transitions from: :running, to: :passing
+      end
     end
 
     context 'when all transitions are valid' do

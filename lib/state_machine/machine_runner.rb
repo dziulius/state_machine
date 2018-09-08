@@ -3,19 +3,20 @@ module StateMachine
   #  - checks if event can be run
   #  - runs before/after callbacks on states and transitions
   #  - sets new state if transition can be performed
+  # :reek:MissingSafeMethod
   class MachineRunner
     def initialize(object, event_name)
       self.object = object
-      self.event_name = event_name
-      self.machine = object.class.machine
+      self.transition = machine.find_transition(event_name, object.state)
     end
 
-    def perform
-      validate_runnable
-      return false unless transition_can_run?
+    def perform!
+      raise UnknownTransitionError unless transition
+
+      return false unless can_perform?
 
       run_callbacks do
-        object.update_state(transition.to)
+        object.state = transition.to
       end
     end
 
@@ -26,17 +27,8 @@ module StateMachine
 
     private
 
-    def event
-      @event ||= machine.events[event_name]
-    end
-
-    def transition
-      @transition ||= event.find_transition(object.state) if event
-    end
-
-    def validate_runnable
-      raise UnknownEventError unless event
-      raise UnknownTransitionError unless transition
+    def machine
+      object.class.machine
     end
 
     def transition_can_run?
@@ -62,6 +54,6 @@ module StateMachine
       target.callback_for(:after, prefix: prefix)&.call(object)
     end
 
-    attr_accessor :object, :event_name, :machine
+    attr_accessor :object, :transition
   end
 end

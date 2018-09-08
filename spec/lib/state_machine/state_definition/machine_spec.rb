@@ -4,7 +4,7 @@ RSpec.describe StateMachine::StateDefinition::Machine do
   let(:machine) { described_class.new }
   let(:add_waiting_state) { machine.add_state :waiting, initial: true }
   let(:add_running_state) { machine.add_state :running }
-  let(:add_run_event) { machine.add_event :run, &proc { transitions from: :waiting, to: :running } }
+  let(:add_run_event) { machine.add_event(:run) { transitions from: :waiting, to: :running } }
 
   describe '#initial_state_from' do
     context 'when empty' do
@@ -111,6 +111,34 @@ RSpec.describe StateMachine::StateDefinition::Machine do
       it 'does not set initial state' do
         add_running_state
         expect(machine.initial_state_from(nil)).to be_nil
+      end
+    end
+  end
+
+  describe '#find_transition' do
+    before do
+      add_waiting_state
+      add_running_state
+      add_run_event
+    end
+
+    context 'when event not found' do
+      it 'raises error' do
+        expect {
+          machine.find_transition(:hold, :running)
+        }.to raise_error(StateMachine::UnknownEventError)
+      end
+    end
+
+    context 'when transition not found' do
+      it 'returns nil' do
+        expect(machine.find_transition(:run, :walking)).to be_nil
+      end
+    end
+
+    context 'when transition found' do
+      it 'returns transition' do
+        expect(machine.find_transition(:run, :waiting).to).to eq(:running)
       end
     end
   end
