@@ -4,7 +4,7 @@ module StateMachine
   module StateDefinition
     # Parses and contains transisions available on event
     class Event
-      attr_reader :name
+      attr_reader :name, :available_transitions
 
       def initialize(name, &block)
         self.name = name.to_sym
@@ -25,8 +25,7 @@ module StateMachine
 
       private
 
-      attr_writer :name
-      attr_accessor :available_transitions
+      attr_writer :name, :available_transitions
 
       def transitions(options)
         transition = Transition.new(options)

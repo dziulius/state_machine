@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+
+require 'bundler/setup'
+require 'state_machine'
+require 'state_machine/machine_graph'
+
+require ARGV[1]
+
+StateMachine::MachineGraph.new(Object.const_get(ARGV[0]), path: ARGV[2]).draw
