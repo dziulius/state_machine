@@ -1,5 +1,6 @@
 module StateMachine
   module StateDefinition
+    # Stores information about transition: from and to states, callbacks, guard clause
     class Transition
       include HasCallbacks
 
@@ -7,6 +8,7 @@ module StateMachine
 
       attr_reader :callbacks, :to, :from, :condition
 
+      # :reek:DuplicateMethodCall
       def initialize(from:, to:, **options)
         self.from = Array(from).map(&:to_sym)
         self.to = to

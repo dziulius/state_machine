@@ -3,6 +3,7 @@ require_relative 'state'
 
 module StateMachine
   module StateDefinition
+    # Main state definition class. Stores events, states and initial state
     class Machine
       attr_reader :states, :events, :initial_state
 
@@ -18,6 +19,7 @@ module StateMachine
         initial_state
       end
 
+      #:reek:BooleanParameter :reek:ControlParameter
       def add_state(name, initial: false, **options)
         state = State.new(name, options)
         states[state.name] = state

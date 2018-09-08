@@ -1,4 +1,8 @@
 module StateMachine
+  # Responsible for calling event on machine and checking if event can be ran.
+  #  - checks if event can be run
+  #  - runs before/after callbacks on states and transitions
+  #  - sets new state if transition can be performed
   class MachineRunner
     def initialize(object, event_name)
       self.object = object
@@ -10,15 +14,12 @@ module StateMachine
       validate_runnable
       return false unless transition_can_run?
 
-      run_callbacks(machine.states[object.state], prefix: :leave) do
-        run_callbacks(machine.states[transition.to], prefix: :enter) do
-          run_callbacks(transition) do
-            object.state = transition.to
-          end
-        end
+      run_callbacks do
+        object.update_state(transition.to)
       end
     end
 
+    # :reek:NilCheck
     def can_perform?
       !transition.nil? && transition_can_run?
     end
@@ -43,7 +44,19 @@ module StateMachine
       !condition || condition.call(object)
     end
 
-    def run_callbacks(target, prefix: nil)
+    # :reek:DuplicateMethodCall
+    def run_callbacks
+      run_callback(machine.states[object.state], prefix: :leave) do
+        run_callback(machine.states[transition.to], prefix: :enter) do
+          run_callback(transition) do
+            yield
+          end
+        end
+      end
+    end
+
+    # :reek:NilCheck
+    def run_callback(target, prefix: nil)
       target.callback_for(:before, prefix: prefix)&.call(object)
       yield
       target.callback_for(:after, prefix: prefix)&.call(object)

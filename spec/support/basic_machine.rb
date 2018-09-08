@@ -1,3 +1,4 @@
+# Basic state machine example
 class BasicMachine
   include StateMachine
 

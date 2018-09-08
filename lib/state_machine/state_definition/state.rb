@@ -1,5 +1,6 @@
 module StateMachine
   module StateDefinition
+    # State wrapper. Stores callbacks for state.
     class State
       include HasCallbacks
 

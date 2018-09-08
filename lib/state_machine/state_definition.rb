@@ -6,6 +6,8 @@ require_relative 'errors'
 
 module StateMachine
   module StateDefinition
+    # DSL for defining state machine
+    # defines helper methods on state machine
     module ClassMethods
       def state(name, options = {})
         machine.add_state(name, options)
@@ -44,12 +46,22 @@ module StateMachine
       end
     end
 
+    # Defines initializer on state machine
+    # :reek:ModuleInitialize
     module InstanceMethods
-      attr_accessor :state
+      attr_reader :state
 
       def initialize(state = nil)
         self.state = self.class.machine.initial_state_from(state)
       end
+
+      def update_state(new_state)
+        self.state = new_state
+      end
+
+      private
+
+      attr_writer :state
     end
   end
 end

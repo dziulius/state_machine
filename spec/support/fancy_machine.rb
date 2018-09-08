@@ -1,3 +1,4 @@
+# Advaced state machine example with lots of callbacks
 class FancyMachine
   include StateMachine
 

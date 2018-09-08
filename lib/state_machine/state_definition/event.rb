@@ -2,6 +2,7 @@ require_relative 'transition'
 
 module StateMachine
   module StateDefinition
+    # Parses and contains transisions available on event
     class Event
       attr_reader :name
 
