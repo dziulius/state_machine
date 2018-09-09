@@ -35,6 +35,8 @@ movement_state.can_hold? # => false
 movement_state.standing? # => false
 ```
 
+See more examples in [examples directory](examples)
+
 ### Defining callbacks
 
 #### State callbacks
@@ -146,7 +148,7 @@ To do so you can
 * use command line tool: `bin/generate_graph FancyMachine ./spec/support/fancy_machine.rb images/`.
 * or use drawer directly from code:
 ```ruby
-StateMachine::MachineGraph.new(FancyMachine, path: './images')
+StateMachine::MachineGraph.new(FancyMachine, path: './images').draw
 ```
 
 ![Alt FancyMachine](examples/FancyMachine.png?raw=true "FancyMachine Graph")
